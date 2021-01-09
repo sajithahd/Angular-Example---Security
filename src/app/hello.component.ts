@@ -4,6 +4,10 @@ import { Component, Input } from "@angular/core";
   selector: "hello",
   template: `
     <h1>Hello {{ name }}!</h1>
+
+    <a [href]="url">Click Me</a>
+
+    <input (ngModelChange)="onChangeEvent($event)" />
   `,
   styles: [
     `
@@ -15,4 +19,10 @@ import { Component, Input } from "@angular/core";
 })
 export class HelloComponent {
   @Input() name: string;
+
+  url: any;
+
+  onChangeEvent(event) {
+    console.log(event);
+  }
 }
