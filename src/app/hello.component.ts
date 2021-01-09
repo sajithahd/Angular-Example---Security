@@ -1,13 +1,23 @@
 import { Component, Input } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: "hello",
   template: `
     <h1>Hello {{ name }}!</h1>
+    <div>
+      <input [ngModel]="name" (ngModelChange)="onChangeEvent($event)" />
+    </div>
 
-    <a [href]="url">Click Me</a>
+    <div>
+      untrsuted URL
+      <a [href]="url">Click Me</a>
+    </div>
 
-    <input (ngModelChange)="onChangeEvent($event)" />
+    <div>
+      trusted URL
+      <a [href]="trustedUrl">Click Me</a>
+    </div>
   `,
   styles: [
     `
@@ -21,8 +31,14 @@ export class HelloComponent {
   @Input() name: string;
 
   url: any;
+  trustedUrl: any;
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   onChangeEvent(event) {
-    console.log(event);
+    this.url = "javascript:alert('" + event + "')";
+    console.log(this.url);
+
+    this.trustedUrl = this.sanitizer.bypassSecurityTrustUrl(this.url);
   }
 }
